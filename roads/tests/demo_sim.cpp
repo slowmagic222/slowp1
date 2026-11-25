@@ -1,6 +1,6 @@
 // Simulates roads' page on the PC over a scripted performance (no text), writing PPM frames for roads/demo.gif.
 // g++ -O2 -std=gnu++11 tests/demo_sim.cpp -o demo_sim && ./demo_sim frames 4
-// ffmpeg -framerate 15 -i frames/f%04d.ppm -vf "fps=12,crop=320:220:30:0,scale=640:440:flags=neighbor,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];[b][p]paletteuse=dither=none:diff_mode=rectangle" demo.gif
+// ffmpeg -framerate 15 -i frames/f%04d.ppm -vf "fps=12,scale=960:440:flags=neighbor,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];[b][p]paletteuse=dither=none:diff_mode=rectangle" demo.gif
 // gifsicle -O3 --lossy=60 demo.gif -o demo.gif
 #include <stdio.h>
 #include <string.h>
