@@ -2,7 +2,7 @@
 
 A string section: contrabass, cellos, violas and violins from real recordings, with a string machine layer and a grain stretch. An open-field **synth engine**. 6 voices, stereo.
 
-Demo: _coming soon_
+![bows demo](demo.gif)
 
 ## Install
 
