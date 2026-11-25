@@ -25,7 +25,7 @@ Five packs for the **OP-1 Field** running Faust's [open-field](https://github.co
 | 4 | [4loop](fourloop/) | master effect: four loopers | `4loop.pack` |
 | 5 | [pendulum](pendulum/) | sequencer: swinging notes | `pendulum.pack` |
 
-Download the files from **[Releases](../../releases)**.
+Download the files from Releases
 
 ## Needs
 
