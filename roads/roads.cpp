@@ -1,5 +1,5 @@
-// roads.pack: Roads (TINE 0.2, the OG OP-1 electric piano multisampler, "Roads" like Rhodes) as an open-field synth
-// engine (levels 9 and 10, base 30+). GPL-3.0-or-later with OP-1 firmware permission (as TINE 0.2).
+// roads.pack: Roads (an electric piano multisampler, "Roads" like Rhodes) as an open-field synth
+// engine (levels 9 and 10, base 30+). GPL-3.0-or-later with OP-1 firmware permission.
 // Samples: jRhodes (Jeffrey Learman, 1977 Rhodes Mark I Stage 73), CC BY-NC 4.0: see bank/SOURCES.md.
 //
 // What the owner meets: `roads` in the engine list (shift and T1 on a synth sound). Knobs: tone, sustain, wow,
@@ -8,11 +8,11 @@
 // T1 shows a suitcase electric piano on a kids' road rug; a toy car on its lid rolls to above the last note played.
 //
 // How it runs: each of the unit's six voices owns a one-voice, one-part ms_core (core/) in its working memory, with
-// the bank flagged TINE: the TINE 0.2 voice path, held sample for sample to the OG engine by tests/test_tine.c, at
-// the OG's own rate and block (88,200 Hz, 128 frames: the engine's), so nothing is resampled. Pitch comes from the
-// block's step, worked out as the OG did (step x bank rate / 88,200 / the root's step), so glide and bend work; the
+// the bank flagged TINE: the TINE voice path, at
+// the classic own rate and block (88,200 Hz, 128 frames: the engine's), so nothing is resampled. Pitch comes from the
+// block's step, worked out as classic (step x bank rate / 88,200 / the root's step), so glide and bend work; the
 // recording is chosen at the note's start. Velocity chooses among TINE's three dynamics when the bank says so
-// (roads.msb); roads-rr.msb takes them in turn as the OG did.
+// (roads.msb); roads-rr.msb takes them in turn as classic.
 // The bank is a file: roads.msb in the pack's folder `roads` (user/pf/roads/), read once into level 6 working memory
 // by the frame function. Until it is there the engine renders silence and the page says why.
 //
@@ -40,7 +40,7 @@ static const uint16_t WIDTH = 19660;    // the stereo the core spreads by: 60 % 
 
 static ms_bank_t bank_store;                       // parsed by the frame function, then only read
 static const ms_bank_t* volatile bank_ready;       // published once, never taken back (the file buffer stays)
-static volatile unsigned char rr_shared[128];      // round-robin by played note, shared by the six voices (OG ms_rr)
+static volatile unsigned char rr_shared[128];      // round-robin by played note, shared by the six voices (classic ms_rr)
 static volatile u32 voice_slot[6], voice_note[6], voice_on[6], voice_begins[6];   // for the page: what each voice plays
 static volatile u32 velocity_off;                  // the velocity switch (a red-orange knob press): 1 = every take in turn, velocity unheard
 static volatile u32 begin_serial, begin_velocity[6];   // velocity: as render got it, for the log                  // counts the notes begun; voice_begins holds it at each voice's last
@@ -105,7 +105,7 @@ static u32 mul_div(u32 a, u32 b, u32 c) {
     return q;
 }
 
-// The rate (Q16 bank frames an output frame) the OG worked out: inc x (MS_RATE x 65536 / 88200) / the root's inc.
+// The rate (Q16 bank frames an output frame) the classic worked out: inc x (MS_RATE x 65536 / 88200) / the root's inc.
 static u32 rate_for_step(const ms_bank_t* b, const ms_zone_t* z, u32 step) {
     u32 k = ms_udiv(b->rate << 16, (u32)OUT_RATE);
     u32 rate = mul_div(step, k, STEP[z->root]);
@@ -126,7 +126,7 @@ static uint16_t loop_in_word(int v) {              // 50 is TINE's 16384: the ba
     return (uint16_t)(16384u + (((u32)(v - 50) * 335524u + 512u) >> 10));
 }
 
-// Output: TINE's voice is already 6 dB down (its OG headroom). +3 dB here, as felt, with a soft knee above 24,000
+// Output: TINE's voice is already 6 dB down (its classic headroom). +3 dB here, as felt, with a soft knee above 24,000
 // and a hard hold at full scale.
 static int to_q31(int32_t x) {
     int32_t u = (x * 45) >> 5;
@@ -155,7 +155,7 @@ extern "C" void roads_reset(unsigned slot, unsigned voice, void* state) {   // d
     Voice* v = (Voice*)state;
     if (!v) return;
     v->magic = 0;
-    ms_core_init(&v->core, (u32)OUT_RATE);        // TINE's own rate: the OG path unchanged
+    ms_core_init(&v->core, (u32)OUT_RATE);        // TINE's own rate: the classic path unchanged
     v->core.parts[0].rr_spread = 0;               // TINE's three recordings are dynamics, not takes: no left/right
     v->core.parts[0].wash_width = 0;              // no stereo diffuser: at 88.2 kHz it cost too much (the unit switched
                                                   // roads off with ambient up); TINE's ambient is its own, in the voice
@@ -193,7 +193,7 @@ extern "C" void roads_render(const Op1fVoiceBlock* now) {
         int vel = now->velocity >> 24;
         if (vel < 1) vel = 1; else if (vel > 127) vel = 127;
         p->rr[note] = rr_shared[note];            // TINE turns the counter of the played note
-        p->rr[60] = rr_shared[60];                // the OG seeds the lofi hiss from it
+        p->rr[60] = rr_shared[60];                // the classic seeds the lofi hiss from it
         if (ms_note_on(c, 0, note, vel) >= 0) { v->note = note; v->sounding = 1; v->last_step = 0; }
         rr_shared[note] = p->rr[note];
     }
@@ -427,7 +427,7 @@ static void paint(void* canvas, u32 where, u32 how, u32 shift, u32 ms) {
 }
 
 // Style (the third knob, as felt's): a turn steps it once a click (no long spin), and a press of the grey knob steps it
-// round, OG, SLOW, LOFI, OG (as the OG's white press). A press of the red-orange knob is the velocity switch. The input
+// round, OG, SLOW, LOFI, OG (as a white press). A press of the red-orange knob is the velocity switch. The input
 // function only counts; the frame function sets the value and keeps the switch in the file roads.cfg (folder roads).
 enum { INPUT_LEVEL_2 = 36, KNOB_STYLE = 2, KEY_STYLE_CLICK = 56, KEY_VELOCITY_CLICK = 57 };
 static volatile int style_turns, style_presses, velocity_presses;

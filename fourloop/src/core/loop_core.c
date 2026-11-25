@@ -224,7 +224,7 @@ void lc_command(lc_engine *e, int kind, int index, int value)
             take_writer(e, index); lc_trim(e, index, 0); l->bin_shift = 9;
             l->written = l->length = l->duration = 0; l->sum[0] = l->sum[1] = 0; l->quality = l->rec_phase = 0; l->keep = LC_KEEP_WHOLE; l->span = l->dur = l->cycle = 0;
             for (int c = 0; c < 2; c++) for (int b = 0; b < LC_BINS; b++) l->peaks[c][b] = 0;
-            int first = 1;                       /* Field: the very first take waits for sound (OG 0.11's start) */
+            int first = 1;                       /* Field: the very first take waits for sound (classic 0.11's start) */
             for (int j = 0; j < LC_LOOPS; j++) if (j != index && e->loop[j].state != LC_EMPTY && e->loop[j].state != LC_ARM) first = 0;
             l->capture_sync = e->sync && e->master_length ? 1 : first ? LC_WAIT_SOUND : 0;
             l->state = l->capture_sync ? LC_ARM : LC_REC;

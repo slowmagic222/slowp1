@@ -10,7 +10,7 @@
  *
  * Three concerns, matching the three things any loader exposes (see INTEGRATION.md §2, §6, §8):
  *   1. memory  — the loader hands us one aligned block from its heap (the "CCES heap 1" pool on
- *                the Field, an fx lease on OG, or malloc in the harness).
+ *                the Field, an fx lease on classic, or malloc in the harness).
  *   2. screen  — the loader turns our draw ops into whatever its renderer wants (SVG nodes via the
  *                content/display loader at 0x8FC8AB7C, open-xy's retained scene, or an SVG file).
  *   3. timing  — a millisecond clock for the scene's drift/pulse animation.

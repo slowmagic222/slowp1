@@ -1,7 +1,7 @@
 /* ms_core: see ms_core.h. GPL-3.0-or-later with OP-1 firmware permission.
- * The mono voice path (ms_voice_render_mono) follows felt-keyboard-v16/felt/ms_engine.h line by line; comments
- * marked OG say where it does. Everything stereo, multitimbral or velocity happens after that path, so width 0,
- * velocity amount 0 and damp 0 reproduce the OG samples exactly. */
+ * The mono voice path (ms_voice_render_mono) is the plain mono sample path.
+ * Everything stereo, multitimbral or velocity happens after that path, so width 0,
+ * velocity amount 0 and damp 0 reproduce the plain mono path exactly. */
 #include "ms_core.h"
 
 static int32_t sat16(int32_t x) { return x > 32767 ? 32767 : x < -32768 ? -32768 : x; }
@@ -88,7 +88,7 @@ void ms_core_init(ms_core_t *c, uint32_t out_rate) {
     uint8_t *raw = (uint8_t *)c;
     for (unsigned i = 0; i < sizeof *c; i++) raw[i] = 0;
     c->out_rate = out_rate ? out_rate : 44100;
-    /* OG: release_coef = 657000 / release_ms at 44.1 kHz; scaled here for other output rates. */
+    /* classic: release_coef = 657000 / release_ms at 44.1 kHz; scaled here for other output rates. */
     uint32_t ratio = ms_udiv(44100u << 12, c->out_rate);              /* Q12 */
     c->release_k = ((657000u >> 3) * ratio) >> 9;
     c->silent_amp = 16;
@@ -99,7 +99,7 @@ void ms_core_init(ms_core_t *c, uint32_t out_rate) {
     }
 }
 
-/* ---- ADPCM (OG verbatim) ---- */
+/* ---- ADPCM (classic verbatim) ---- */
 static const int16_t steps[89] = {7,8,9,10,11,12,13,14,16,17,19,21,23,25,28,31,34,37,41,45,50,55,60,66,73,80,88,97,107,118,
     130,143,157,173,190,209,230,253,279,307,337,371,408,449,494,544,598,658,724,796,876,963,1060,1166,1282,1411,1552,1707,1878,
     2066,2272,2499,2749,3024,3327,3660,4026,4428,4871,5358,5894,6484,7132,7845,8630,9493,10442,11487,12635,13899,15289,16818,
@@ -142,12 +142,12 @@ uint32_t ms_rate_for(const ms_core_t *c, const ms_bank_t *b, const ms_zone_t *z,
     if (oct > 6) oct = 6;
     if (oct < -40) oct = -40;
     uint32_t rate = (mul_shift(base, SEMI[d], (unsigned)(23 - oct)) + 1u) >> 1;   /* Q24 x Q16 -> Q16, rounded */
-    if (rate < 256) rate = 256;                                      /* OG clamp */
+    if (rate < 256) rate = 256;                                      /* classic clamp */
     if (rate > 262144) rate = 262144;
     return rate;
 }
 
-/* ---- zone choice: OG ms_select, plus velocity ranges ---- */
+/* ---- zone choice: classic ms_select, plus velocity ranges ---- */
 /* counter: the note whose round-robin counter turns (FELT: the source note; TINE: the played note, ms_select_for) */
 static int select_zone(ms_part_t *p, int note, int vel, int counter) {
     const ms_bank_t *b = p->bank;
@@ -169,7 +169,7 @@ static int select_zone(ms_part_t *p, int note, int vel, int counter) {
 }
 int ms_select_zone(ms_part_t *p, int note, int vel) { return select_zone(p, note, vel, note); }
 
-/* ---- loop bounds: OG ms_bounds_preferred (moving_end 0) and ms_sample_start ---- */
+/* ---- loop bounds: classic ms_bounds_preferred (moving_end 0) and ms_sample_start ---- */
 static void bounds(const ms_bank_t *b, const ms_zone_t *z, unsigned start_trim, unsigned end_trim, uint32_t *lo, uint32_t *hi) {
     uint32_t guard = b->rate / 4u, limit = z->loop_limit;
     if (limit <= guard + b->rate) { *lo = z->loop_start; *hi = z->loop_end; return; }   /* too short to edit */
@@ -188,7 +188,7 @@ static void editor(const ms_part_t *p, unsigned *attack, unsigned *start, unsign
 }
 
 /* TINE ms_bounds: loop in 16384 = the bank's own start, below it a share of it, above it up to the top; loop out
- * 32767 = the bank's end; the window never shorter than 350 ms. The OG's 64-bit products fit 32 bits here. */
+ * 32767 = the bank's end; the window never shorter than 350 ms. The classic 64-bit products fit 32 bits here. */
 static void tine_bounds(const ms_bank_t *b, const ms_zone_t *z, unsigned start_trim, unsigned end_trim, uint32_t *lo, uint32_t *hi) {
     uint32_t limit = z->loop_limit, minimum = (b->rate * 7u * 3277u) >> 16;   /* 35 % of a second: 4200 at 12 kHz, no division */
     if (start_trim > 32767) start_trim = 32767;
@@ -231,7 +231,7 @@ int ms_note_on(ms_core_t *c, unsigned part, int note, int vel) {
     if (played < 0) played = 0; else if (played > 127) played = 127;
     int vi = pick_voice(c);
     ms_voice_t *v = &c->voices[vi];
-    /* OG ms_on */
+    /* classic ms_on */
     v->frame = 0; v->frac = 0; v->amp = 32767;
     v->release_level = 32767u << 16; v->wash_env = 0;
     v->noise = 0x1234567u + p->rr[60] + (uint32_t)vi * 1234567u;
@@ -239,7 +239,7 @@ int ms_note_on(ms_core_t *c, unsigned part, int note, int vel) {
     v->direction = 1; v->loop_valid = 0; v->edit_gain = 32767; v->edit_phase = 0;
     v->pad_gain = 8192; v->lofi_held = 0; v->lofi_count = 0;
     v->start_gain = 32767; v->gate = 1; v->lp = 0;
-    /* OG pending block: choose the recording (source octave up), tune it to the played note */
+    /* classic pending block: choose the recording (source octave up), tune it to the played note */
     v->note = (uint8_t)played;
     v->source_shift = p->source_octave > 2 ? 2 : p->source_octave;
     int tine = (p->bank->flags & MS_BANK_TINE) != 0;
@@ -267,7 +267,7 @@ int ms_note_on(ms_core_t *c, unsigned part, int note, int vel) {
     v->start_gain = v->frame ? 0 : 32767;
     }
     v->rate = ms_rate_for(c, p->bank, z, played);
-    /* Field: stereo place and velocity, outside the OG path */
+    /* Field: stereo place and velocity, outside the classic path */
     int32_t pan = 0;
     if (p->width) {
         pan = (z->take & 1) ? -(int32_t)p->rr_spread : (int32_t)p->rr_spread;
@@ -301,7 +301,7 @@ void ms_all_off(ms_core_t *c, unsigned part) {
     for (unsigned i = 0; i < MS_VOICES; i++) if (c->voices[i].part == part) c->voices[i].gate = 0;
 }
 
-/* ---- the OG voice path ---- */
+/* ---- the classic voice path ---- */
 static int32_t read_frame(ms_voice_t *v, const ms_bank_t *b, const ms_zone_t *z, uint32_t frame, uint32_t frac) {
     if (frame >= z->frames) return 0;
     uint32_t block = frame >> 7;
@@ -315,7 +315,7 @@ static int32_t read_frame(ms_voice_t *v, const ms_bank_t *b, const ms_zone_t *z,
     return a + (((int32_t)v->cache[(frame & 127u) + 1] - a) * (int32_t)(frac >> 1) >> 15);
 }
 
-static void advance(ms_voice_t *v, uint32_t rate, int looping) {          /* OG ms_advance */
+static void advance(ms_voice_t *v, uint32_t rate, int looping) {          /* classic ms_advance */
     uint32_t whole = rate >> 16, part = rate & 65535u;
     if (!looping) v->direction = 1;
     if (v->direction > 0) {
@@ -342,7 +342,7 @@ static void advance(ms_voice_t *v, uint32_t rate, int looping) {          /* OG 
     }
 }
 
-static void edit_tick(ms_voice_t *v) {                                    /* OG ms_edit_tick */
+static void edit_tick(ms_voice_t *v) {                                    /* classic ms_edit_tick */
     if (v->edit_phase == 1) {
         v->edit_gain -= 512;
         if (v->edit_gain <= 0) {
@@ -356,7 +356,7 @@ static void edit_tick(ms_voice_t *v) {                                    /* OG 
     }
 }
 
-/* TINE's sine: Q15, 8192 steps a turn (the OG's OP1_SINE_TABLE[phase >> 19]). A quarter by a fifth-order odd
+/* TINE's sine: Q15, 8192 steps a turn (the classic OP1_SINE_TABLE[phase >> 19]). A quarter by a fifth-order odd
  * polynomial, good to about 0.3%: only the wow and flutter use it. */
 int32_t ms_sine(uint32_t index) {
     index &= 8191u;
@@ -429,7 +429,7 @@ static void render_tine(ms_core_t *c, ms_voice_t *v, int16_t *out, unsigned fram
         if (v->start_gain < 32767) { v->start_gain += 128; if (v->start_gain > 32767) v->start_gain = 32767; value = (value * v->start_gain) >> 15; }
         if (v->edit_phase) { value = (value * v->edit_gain) >> 15; edit_tick(v); }
         value = (value * makeup) >> 12;
-        value = (value * 16384) >> 15;                                    /* -6 dB, as TINE 0.2 */
+        value = (value * 16384) >> 15;                                    /* -6 dB, as TINE */
         if (value > 24000) value = 24000 + ((value - 24000) >> 2);
         if (value < -24000) value = -24000 + ((value + 24000) >> 2);
         out[i] = (int16_t)sat16(value);
@@ -518,7 +518,7 @@ void ms_voice_render_mono(ms_core_t *c, ms_voice_t *v, int16_t *out, unsigned fr
     }
 }
 
-/* ---- stereo wash: Granulizer+'s diffuser, returning the wet part only ---- */
+/* ---- stereo wash: the stereo diffuser, returning the wet part only ---- */
 static uint32_t qsin(uint32_t x) {                                         /* sin(x * pi/2), Q15 in and out */
     if (x > 32767) x = 32767;
     uint32_t x2 = (x * x) >> 15;

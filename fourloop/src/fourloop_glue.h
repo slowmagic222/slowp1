@@ -80,7 +80,7 @@ void fl_audio(int32_t *left, int32_t *right, int frames);
 
 /* Level 8: one block of the 4loop effect on the master's Q31 sums. values[i] (0..FL_LEVEL_TOP) is loop i's level as
  * the knob, an LFO or the save left it; it is written into the core before the block. Audio thread. */
-#define FL_LEVEL_TOP 32                  /* 32 steps of 1024, as the OG's level knob */
+#define FL_LEVEL_TOP 32                  /* 32 steps of 1024, as the classic level knob */
 void fl_effect(int32_t *left, int32_t *right, int frames, const int *values, int count);
 int32_t fl_level_gain(int value);        /* 0..FL_LEVEL_TOP -> 0..32767 */
 

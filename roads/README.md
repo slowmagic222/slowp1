@@ -1,6 +1,6 @@
 # roads
 
-An electric piano ("Roads", like Rhodes). Port of my OG OP-1 TINE plugin as an open-field **synth engine**. 6 voices, stereo. The page grows a little town on a rug as you play.
+An electric piano ("Roads", like Rhodes), as an open-field **synth engine**. 6 voices, stereo. The page grows a little town on a rug as you play.
 
 Demo: _coming soon_
 

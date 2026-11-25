@@ -1,12 +1,11 @@
-// felt.pack: FELT (OG OP-1 felt piano multisampler, v16) as an open-field synth engine (levels 9 and 10, base 30+).
-// GPL-3.0-or-later with OP-1 firmware permission (as FELT v16). Samples: CC0 (see the bank's SOURCES.md).
+// felt.pack: FELT (a felt piano multisampler) as an open-field synth engine (levels 9 and 10, base 30+).
+// GPL-3.0-or-later with OP-1 firmware permission. Samples: CC0 (see the bank's SOURCES.md).
 //
 // What the owner meets: `felt` in the engine list (shift and T1 on a synth sound). Knobs: felt, decay, style, ambient;
-// with shift: start, loop in, loop out (the OG three-marker loop editor) and width (stereo). T1 shows the values.
+// with shift: start, loop in, loop out (the classic three-marker loop editor) and width (stereo). T1 shows the values.
 //
-// How it runs: each of the unit's six voices owns a one-voice, one-part ms_core (core/, the FELT core held sample for
-// sample to the OG engine by tests/test_core.c) in its working memory. It renders the OG path at 44,100 Hz, 64 frames,
-// exactly as on the OG, and doubles it to the engine's 88,200 Hz, 128 frames by linear interpolation. Pitch comes from
+// How it runs: each of the unit's six voices owns a one-voice, one-part ms_core (core/, the FELT sample core) in its working memory. It renders the classic path at 44,100 Hz, 64 frames,
+// exactly as classic, and doubles it to the engine's 88,200 Hz, 128 frames by linear interpolation. Pitch comes from
 // the block's step, so glide and bend work; the zone (and its round-robin take) is chosen at the note's start.
 // The bank is a file: felt.msb in the pack's folder `felt` (user/pf/felt/), read once into level 6 working memory by
 // the frame function. Until it is there the engine renders silence and the page says why.
@@ -27,8 +26,8 @@ extern "C" const Op1fCard op1f_card_felt OP1F_NAMED("op1f_card_felt");
 enum { VALUES = 8, FRAMES = 128, HALF = 64, ENGINE_ASK = 0, MEMORY_ASK = 1, PAGE_ASK = 2, FLOOR_ASK = 3, BASE_ASK = 4, FOLDER = 0, FRAME_LEVEL_4 = 40, BLOCK_LEVEL_9 = 52 };
 enum { V_TONE = 0, V_RELEASE, V_STYLE, V_WASH, V_START, V_LOOP_IN, V_LOOP_OUT, V_WIDTH };
 
-// The third knob, style, picks the piano: 0 the plain felt piano (brown), 1 the OG's lofi stretch (blue: the recording
-// an octave up played slowed back), 2 the OG's second stretch (grey: two octaves). The OG's lofi grit is gone: always 0.
+// The third knob, style, picks the piano: 0 the plain felt piano (brown), 1 the classic lofi stretch (blue: the recording
+// an octave up played slowed back), 2 the classic second stretch (grey: two octaves). The classic lofi grit is gone: always 0.
 static int style_of(int v) { return v < 0 ? 0 : v > 2 ? 2 : v; }
 enum { BANK_ROOM = 786432, VOICE_BYTES = 32768 };
 static const u32 MAGIC = 0x464c5431u;   // "FLT1": the voice's core was set up by felt_reset
@@ -96,7 +95,7 @@ static u32 frac16(u32 a, u32 b) {                  // a * 2^16 / b for a < b < 2
 }
 
 // Rate (Q16 bank frames per 44.1 kHz frame) for the zone at the step's exact pitch: the rate of the note at or below
-// (the OG table) times the step's distance above that note. Exactly the OG rate when the step is a note's own.
+// (the classic table) times the step's distance above that note. Exactly the classic rate when the step is a note's own.
 static u32 rate_for_step(const ms_core_t* c, const ms_bank_t* b, const ms_zone_t* z, u32 step) {
     int n = note_below(step);
     u32 t = STEP[n];
@@ -142,9 +141,9 @@ extern "C" void felt_reset(unsigned slot, unsigned voice, void* state) {   // di
     Voice* v = (Voice*)state;
     if (!v) return;
     v->magic = 0;
-    ms_core_init(&v->core, 44100u);               // FELT's own rate: the OG path unchanged
+    ms_core_init(&v->core, 44100u);               // FELT's own rate: the classic path unchanged
     v->core.parts[0].wash_width = 0;              // no stereo diffuser: at 88.2 kHz it cost too much (the unit switched
-                                                  // felt off with ambient up); the OG's own mono wash stays, in the voice
+                                                  // felt off with ambient up); the classic own mono wash stays, in the voice
     forget(v);
     v->note = 60;
     v->magic = MAGIC;
@@ -182,7 +181,7 @@ extern "C" void felt_render(const Op1fVoiceBlock* now) {
         int source = note + 12 * (int)p->source_octave;   // the recording the core picks the take for
         if (source > 127) source = 127;
         p->rr[source] = rr_shared[source];
-        p->rr[60] = rr_shared[60];                // the OG seeds the lofi hiss from it
+        p->rr[60] = rr_shared[60];                // the classic seeds the lofi hiss from it
         if (velocity_off) vel = 64;               // off: one level, and only the soft recordings (a bank with layers)
         if (ms_note_on(c, 0, note, vel) >= 0) { v->note = note; v->sounding = 1; v->last_step = 0; v->vel_gain = 4096; }
         rr_shared[source] = p->rr[source];

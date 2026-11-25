@@ -24,7 +24,7 @@ def tone(colour, share):                                 # the colour toward bla
 FILL_STEPS = 5                                           # fourloop.cpp FILL_STEPS: the disc by volume, a fifth a step
 FILL = [[tone(k, 0.55 * (j + 1) / FILL_STEPS) for j in range(FILL_STEPS)] for k in KNOB]
 OFF = [tone(k, 0.12) for k in KNOB]                      # the part of a loop that does not play
-IDLE_FILL = [tone(k, 0.22) for k in KNOB]                # an empty loop: a faint disc and ring in its knob's colour (OG)
+IDLE_FILL = [tone(k, 0.22) for k in KNOB]                # an empty loop: a faint disc and ring in its knob's colour (classic)
 IDLE_RING = [tone(k, 0.5) for k in KNOB]
 FILL_OPACITY = 0.75                                      # the unit's own pictures use opacity (ftwo.svg, tape.svg): loops show through each other
 LIGHT = "#CDD0C2"                                        # palette.svg lightgrey: loop numbers, logo, icons

@@ -1,4 +1,4 @@
-// pendulum.pack: Pendulum, the player of slow magic's OP-1 "S1 Slow1" firmware, as an open-field sequencer (level 5,
+// pendulum.pack: Pendulum, a player of swinging notes, as an open-field sequencer (level 5,
 // base 30+). It changes no place of the firmware and names no address of it.
 //
 // What the owner meets: `pendulum` at the end of the sequencer list, for the synth and the drum. Switched on, a key

@@ -1,6 +1,6 @@
 # pendulum
 
-A sequencer of swinging notes, from my OG OP-1 firmware's player. Each key you press starts a pendulum that plays the note every time it crosses the middle, forever. Many keys swing at once and drift in and out of phase. An open-field **sequencer**, for synth and drum.
+A sequencer of swinging notes. Each key you press starts a pendulum that plays the note every time it crosses the middle, forever. Many keys swing at once and drift in and out of phase. An open-field **sequencer**, for synth and drum.
 
 Demo: _coming soon_
 
