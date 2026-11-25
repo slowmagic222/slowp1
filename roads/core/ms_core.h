@@ -43,7 +43,7 @@ typedef struct {
     uint32_t decay;                          /* TINE: natural tail decay a frame at 88.2 kHz, Q30 (0 = none) */
 } ms_zone_t;
 
-/* Bank flags (header byte 46). MS_BANK_TINE: the TINE character (tine-rhodes-v2/tine/ms_engine.h) in place of
+/* Bank flags (header byte 46). MS_BANK_TINE: the TINE character in place of
  * FELT's: wow and flutter lofi, the fitted natural decay, the ambient soft attack, -6 dB, the TINE loop editor
  * (loop in 16384 = the bank's loop, 350 ms shortest), notes 24..100. Its rates are a frame at 88.2 kHz: run the
  * core at out_rate 88200 for it. */

@@ -372,7 +372,7 @@ int32_t ms_sine(uint32_t index) {
     return q >= 2u ? -s : s;
 }
 
-/* The TINE voice path, tine-rhodes-v2/tine/ms_engine.h ms_render line by line (a block of 128 at 88.2 kHz). */
+/* The TINE voice path (a block of 128 at 88.2 kHz). */
 static void render_tine(ms_core_t *c, ms_voice_t *v, int16_t *out, unsigned frames) {
     const ms_part_t *p = &c->parts[v->part];
     const ms_bank_t *b = p->bank;

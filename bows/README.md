@@ -1,6 +1,6 @@
 # bows
 
-A string section: contrabass, cellos, violas and violins from real recordings, with a string machine layer and a grain stretch. An open-field **synth engine**. 6 voices, stereo.
+A string section: contrabass, cellos, violas and violins from real recordings, with a grain stretch. An open-field **synth engine**. 6 voices, stereo.
 
 Demo: _coming soon_
 
@@ -13,11 +13,11 @@ Demo: _coming soon_
 | Knob | Turn | Shift + turn |
 | --- | --- | --- |
 | blue | bow (attack, up to a 4 s swell) | release |
-| ochre | ensemble (string machine layer) | warmth |
-| grey | stretch (grains, up to 1/64 speed) | vibrato |
+| ochre | stretch (grains, up to 1/64 speed) | warmth |
+| grey | style: as recorded, octave up, two octaves up | slide (a new note near a held one slides to its pitch) |
 | red | ambient | width |
 
-**Red press** = velocity on/off (saved in `bows.cfg`). On: soft or loud recording by velocity. Off: always loud.
+**Grey press** steps the style. **Red press** = velocity on/off (saved in `bows.cfg`). On: soft or loud recording by velocity. Off: always loud.
 
 ## Files
 
