@@ -1,0 +1,137 @@
+{
+  "about": "FELT (OG OP-1 felt piano multisampler, v16) as a synth engine of levels 9 and 10: shift and T1 on a synth sound lists felt among the unit's engines. Each voice runs the FELT core (the OG voice path, sample for sample) at 44,100 Hz and doubles it to 88,200 Hz, stereo. Knobs: felt (tone), decay (release), style (0 the felt piano, 1 and 2 the OG's stretches: its slowed recordings), ambient (wash); with shift: start, loop in, loop out, width. The bank is the file felt.msb in the pack's folder felt (user/pf/felt), read once into 768 KiB of working memory. 32 KiB of working memory a voice, set up by felt_reset on the display thread. T1 shows a 3D scene that glides to each style's own view (felt_scene.h) drawn by the pack into 211,200 bytes of working memory, its floor and its still part kept in two more of 211,200. Two sounds of its own, felt and felt wash. Its values are set in the firmware's own letters, in placeholders of its picture felt.svg (felt.svg.make: the unit's tempo screen's head and tail around them). Changes no place of the firmware; needs the base, level 10.",
+  "name": "felt",
+  "version": 23,
+  "interface": 1,
+  "build": "build_felt",
+  "sources": [
+    "felt/felt.cpp",
+    "felt/felt_rt.cpp",
+    "felt/felt_card.s",
+    "felt/felt_pictures.s"
+  ],
+  "works_with": [],
+  "serves": [],
+  "exports": [],
+  "pictures": [
+    {
+      "name": "felt.svg",
+      "file": "felt/felt.svg.make"
+    }
+  ],
+  "card": {
+    "level": 10,
+    "frame": "felt_frame",
+    "pick": null,
+    "pictures": true,
+    "input": "felt_input",
+    "folders": [
+      {
+        "name": "felt",
+        "place": "felt",
+        "shown": true
+      }
+    ],
+    "asks": [
+      {
+        "kind": "engine",
+        "name": "felt",
+        "stereo": true,
+        "cycles": 40000,
+        "voice_bytes": 32768,
+        "voice_align": 32,
+        "render": "felt_render",
+        "reset": "felt_reset",
+        "shown": "felt_shown",
+        "params": [
+          {
+            "name": "felt",
+            "low": 0,
+            "high": 100,
+            "start": 73
+          },
+          {
+            "name": "decay",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "style",
+            "low": 0,
+            "high": 2,
+            "start": 0
+          },
+          {
+            "name": "ambient",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "start",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "loop in",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "loop out",
+            "low": 0,
+            "high": 100,
+            "start": 100
+          },
+          {
+            "name": "width",
+            "low": 0,
+            "high": 100,
+            "start": 60
+          }
+        ],
+        "sounds": [
+          {
+            "name": "felt",
+            "file": "felt.json"
+          },
+          {
+            "name": "felt wash",
+            "file": "felt-wash.json"
+          }
+        ]
+      },
+      {
+        "kind": "memory",
+        "name": "felt-bank",
+        "bytes": 786432,
+        "align": 32
+      },
+      {
+        "kind": "memory",
+        "name": "felt-page",
+        "bytes": 211200,
+        "align": 32
+      },
+      {
+        "kind": "memory",
+        "name": "felt-floor",
+        "bytes": 211200,
+        "align": 32
+      },
+      {
+        "kind": "memory",
+        "name": "felt-base",
+        "bytes": 211200,
+        "align": 32
+      }
+    ]
+  },
+  "marks": [],
+  "named": true,
+  "sum": true,
+  "path": null
+}

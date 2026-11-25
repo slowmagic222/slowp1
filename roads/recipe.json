@@ -1,0 +1,125 @@
+{
+  "about": "Roads (TINE 0.2, the OG OP-1 electric piano multisampler; Roads like Rhodes) as a synth engine of levels 9 and 10: shift and T1 on a synth sound lists roads among the unit's engines. Each voice runs the TINE core (the OG voice path, sample for sample) at 88,200 Hz, stereo. Knobs: muffle (TINE's tone), sustain, style (OG, SLOW, LOFI: the recording 0, 12 or 24 semitones up, slowed back; one step a click, a grey press steps it round, as felt's), ambient; with shift: start, loop in, loop out (the OG three-point loop editor) and wow (TINE's lofi: wow, flutter, grit). A red-orange press is the velocity switch: on, velocity picks among the bank's three dynamics; off, every take in turn (the OG's round robin); kept for all roads sounds in roads.cfg. The bank is the file roads.msb in the pack's folder roads (user/pf/roads), read once into 768 KiB of working memory. 32 KiB of working memory a voice, set up by roads_reset on the display thread. T1 shows a suitcase electric piano on a kids' road rug, a toy car in the style's colour on its lid rolling to above the last note played, and a little world that grows with playing from nothing (a green rug rolls out, roads, trees, houses rise, windows light, cars drive, chimneys smoke) and shrinks back without (roads_scene.h), drawn by the pack into 211,200 bytes of working memory. Two sounds of its own, roads and roads ambient. Its values are set in the firmware's own letters, in placeholders of its picture roads.svg (roads.svg.make: the unit's tempo screen's head and tail around them). Changes no place of the firmware; needs the base, level 10.",
+  "name": "roads",
+  "version": 9,
+  "interface": 1,
+  "build": "build_roads",
+  "sources": [
+    "roads/roads.cpp",
+    "roads/roads_rt.cpp",
+    "roads/roads_card.s",
+    "roads/roads_pictures.s"
+  ],
+  "works_with": [],
+  "serves": [],
+  "exports": [],
+  "pictures": [
+    {
+      "name": "roads.svg",
+      "file": "roads/roads.svg.make"
+    }
+  ],
+  "card": {
+    "level": 10,
+    "frame": "roads_frame",
+    "pick": null,
+    "pictures": true,
+    "input": "roads_input",
+    "folders": [
+      {
+        "name": "roads",
+        "place": "roads",
+        "shown": true
+      }
+    ],
+    "asks": [
+      {
+        "kind": "engine",
+        "name": "roads",
+        "stereo": true,
+        "cycles": 40000,
+        "voice_bytes": 32768,
+        "voice_align": 32,
+        "render": "roads_render",
+        "reset": "roads_reset",
+        "shown": "roads_shown",
+        "params": [
+          {
+            "name": "muffle",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "sustain",
+            "low": 0,
+            "high": 100,
+            "start": 55
+          },
+          {
+            "name": "style",
+            "low": 0,
+            "high": 2,
+            "start": 0
+          },
+          {
+            "name": "ambient",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "start",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "loop in",
+            "low": 0,
+            "high": 100,
+            "start": 50
+          },
+          {
+            "name": "loop out",
+            "low": 0,
+            "high": 100,
+            "start": 100
+          },
+          {
+            "name": "wow",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          }
+        ],
+        "sounds": [
+          {
+            "name": "roads",
+            "file": "roads.json"
+          },
+          {
+            "name": "roads ambient",
+            "file": "roads-ambient.json"
+          }
+        ]
+      },
+      {
+        "kind": "memory",
+        "name": "roads-bank",
+        "bytes": 786432,
+        "align": 32
+      },
+      {
+        "kind": "memory",
+        "name": "roads-page",
+        "bytes": 211200,
+        "align": 32
+      }
+    ]
+  },
+  "marks": [],
+  "named": true,
+  "sum": true,
+  "path": null
+}

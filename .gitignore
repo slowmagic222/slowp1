@@ -1,0 +1,6 @@
+*.pack
+*.msb
+*.wav
+out/
+preview/
+.DS_Store

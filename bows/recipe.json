@@ -1,0 +1,125 @@
+{
+  "about": "Bows, a string section, as a synth engine of levels 9 and 10: shift and T1 on a synth sound lists bows among the unit's engines. Each voice plays VSCO 2 Community Edition's section sustains (CC0: contrabass, cellos, violas, violins by register; a soft and a loud recording a note) at 44.1 kHz drawn up to 88,200 Hz, stereo, with two grains that stretch the recording (down to 1/64 of its speed). Knobs: bow (attack, 4 ms to a 4 s swell), stretch, style (1 as recorded, 2 an octave-up recording played down, 3 two octaves), ambient; with shift: release, warmth, slide (0 none; 1 the slowest to 50 the fastest: a key pressed within half an octave of a held one slides from it, at its velocity, fading up, the held one sounding on), width. A grey press steps the style; a red-orange press is the velocity switch, kept in bows.cfg. The bank is the file bows.msb in the pack's folder bows (user/pf/bows), read once into 3 MiB of working memory. 16 KiB of working memory a voice, set up by bows_reset on the display thread. T1: an isometric string section that comes alive with playing (ribbon bows, confetti), drawn into 211,200 bytes of working memory, with the values in the firmware's own letters in placeholders of its picture bows.svg. Two sounds of its own, bows and bows ambient. Changes no place of the firmware; needs the base, level 10.",
+  "name": "bows",
+  "version": 14,
+  "interface": 1,
+  "build": "build_bows",
+  "sources": [
+    "bows/bows.cpp",
+    "bows/bows_rt.cpp",
+    "bows/bows_card.s",
+    "bows/bows_pictures.s"
+  ],
+  "works_with": [],
+  "serves": [],
+  "exports": [],
+  "pictures": [
+    {
+      "name": "bows.svg",
+      "file": "bows/bows.svg.make"
+    }
+  ],
+  "card": {
+    "level": 10,
+    "frame": "bows_frame",
+    "pick": null,
+    "pictures": true,
+    "input": "bows_input",
+    "folders": [
+      {
+        "name": "bows",
+        "place": "bows",
+        "shown": true
+      }
+    ],
+    "asks": [
+      {
+        "kind": "engine",
+        "name": "bows",
+        "stereo": true,
+        "cycles": 40000,
+        "voice_bytes": 16384,
+        "voice_align": 32,
+        "render": "bows_render",
+        "reset": "bows_reset",
+        "shown": "bows_shown",
+        "params": [
+          {
+            "name": "bow",
+            "low": 0,
+            "high": 100,
+            "start": 20
+          },
+          {
+            "name": "stretch",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "style",
+            "low": 0,
+            "high": 2,
+            "start": 0
+          },
+          {
+            "name": "ambient",
+            "low": 0,
+            "high": 100,
+            "start": 0
+          },
+          {
+            "name": "release",
+            "low": 0,
+            "high": 100,
+            "start": 45
+          },
+          {
+            "name": "warmth",
+            "low": 0,
+            "high": 100,
+            "start": 25
+          },
+          {
+            "name": "slide",
+            "low": 0,
+            "high": 50,
+            "start": 0
+          },
+          {
+            "name": "width",
+            "low": 0,
+            "high": 100,
+            "start": 60
+          }
+        ],
+        "sounds": [
+          {
+            "name": "bows",
+            "file": "bows.json"
+          },
+          {
+            "name": "bows ambient",
+            "file": "bows-ambient.json"
+          }
+        ]
+      },
+      {
+        "kind": "memory",
+        "name": "bows-bank",
+        "bytes": 3145728,
+        "align": 32
+      },
+      {
+        "kind": "memory",
+        "name": "bows-page",
+        "bytes": 211200,
+        "align": 32
+      }
+    ]
+  },
+  "marks": [],
+  "named": true,
+  "sum": true,
+  "path": null
+}

@@ -1,0 +1,83 @@
+{
+  "about": "4loop: four stereo loopers as an effect of level 8 in the unit's list of master effects (the mixer), riding stock delay, so a unit without the pack plays the master dry. Master only: on a synth or drum sound it passes the sound by. Its four values are the four loops' levels (0 to 32), on the knobs, the LFOs and the master's save. T3 on the mixer shows its page (also shift and the metronome key in any mode). Memory: one block of up to 16 MB from the firmware's larger heap (src/fourloop_fw.h names the two heap functions, for OS 1.7.3); no place of the firmware's code is changed. Needs the base, level 8.",
+  "name": "fourloop",
+  "version": 4,
+  "interface": 1,
+  "build": "build_fourloop",
+  "sources": [
+    "fourloop/src/fourloop.cpp",
+    "fourloop/src/fourloop_glue.cpp",
+    "fourloop/src/fourloop_core.cpp",
+    "fourloop/src/fourloop_rt.cpp",
+    "fourloop/fourloop_card.s",
+    "fourloop/fourloop_pictures.s"
+  ],
+  "works_with": [],
+  "serves": [],
+  "exports": [],
+  "pictures": [
+    {
+      "name": "4loop.svg",
+      "file": "fourloop/4loop.svg.make"
+    }
+  ],
+  "card": {
+    "level": 8,
+    "frame": "fourloop_frame",
+    "pick": null,
+    "pictures": true,
+    "input": "fourloop_input",
+    "folders": [
+      {
+        "name": "4loop",
+        "place": "4loop",
+        "shown": true
+      }
+    ],
+    "asks": [
+      {
+        "kind": "effect",
+        "name": "4loop",
+        "rides": "delay",
+        "mono": false,
+        "tails": false,
+        "cycles": 84000,
+        "state_bytes": 0,
+        "state_align": 4,
+        "process": "fourloop_process",
+        "reset": null,
+        "shown": "fourloop_shown",
+        "params": [
+          {
+            "name": "loop 1",
+            "low": 0,
+            "high": 32,
+            "start": 32
+          },
+          {
+            "name": "loop 2",
+            "low": 0,
+            "high": 32,
+            "start": 32
+          },
+          {
+            "name": "loop 3",
+            "low": 0,
+            "high": 32,
+            "start": 32
+          },
+          {
+            "name": "loop 4",
+            "low": 0,
+            "high": 32,
+            "start": 32
+          }
+        ]
+      }
+    ]
+  },
+  "marks": [],
+  "named": true,
+  "sum": true,
+  "path": null
+}

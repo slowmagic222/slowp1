@@ -1,0 +1,52 @@
+{
+  "about": "Pendulum, the player of the S1 Slow1 firmware for the OG OP-1, as a sequencer of level 5: pendulum at the end of the unit's list of sequencers, for the synth and the drum. Each key starts a swing that plays its note each time it crosses the centre, forever; the key again retriggers it. Blue quantize (press: grid), ochre gravity, grey drift (pendulum wave), red scale (press: clear all; shift+press: launch the scale); shift+key plays the instrument straight. Free time by default (shift+blue press: tempo sync); help held shows every control and setting. Its words in the firmware's letters, in placeholders of its picture pendulum.svg (pendulum.svg.make: the unit's tempo screen's head and tail around them). It keeps its three values in pendulum.bin, in a folder the computer does not see. It changes no place of the firmware and needs the base.",
+  "name": "pendulum",
+  "version": 9,
+  "interface": 1,
+  "build": "build_pendulum",
+  "sources": [
+    "pendulum/pendulum.cpp",
+    "pendulum/pendulum_rt.cpp",
+    "pendulum/pendulum_card.s",
+    "pendulum/pendulum_pictures.s"
+  ],
+  "works_with": [],
+  "serves": [],
+  "exports": [],
+  "pictures": [
+    {
+      "name": "pendulum.svg",
+      "file": "pendulum/pendulum.svg.make"
+    }
+  ],
+  "card": {
+    "level": 5,
+    "frame": "pendulum_frame",
+    "pick": null,
+    "pictures": true,
+    "input": "pendulum_input",
+    "folders": [
+      {
+        "shown": false
+      }
+    ],
+    "asks": [
+      {
+        "kind": "sequencer",
+        "name": "pendulum",
+        "synth_only": false,
+        "all_midi": false,
+        "shown": "pendulum_shown",
+        "tick": "pendulum_tick",
+        "key": "pendulum_key",
+        "run": "pendulum_run",
+        "octave": "pendulum_octave",
+        "playing": null
+      }
+    ]
+  },
+  "marks": [],
+  "named": true,
+  "sum": true,
+  "path": null
+}

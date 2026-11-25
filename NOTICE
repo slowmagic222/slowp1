@@ -1,0 +1,16 @@
+slow-p1 field packs: open-field packs for the Teenage Engineering OP-1 Field.
+Copyright (C) 2026 slowmagic222
+
+CODE (every .cpp/.c/.h/.s/.py/.make/.json file): GPL-3.0-or-later (LICENSE), with this additional permission
+(GPL-3.0 section 7): you may combine this program, or a work based on it, with the Teenage Engineering OP-1 /
+OP-1 Field firmware (original or patched) and convey the combination, provided the parts that are this program
+are conveyed under the GPL with this permission. The firmware itself is not covered and is not included here.
+
+NOT INCLUDED: no Teenage Engineering firmware (os.ldr) or any part of it. The packs need Faust's open-field base,
+https://github.com/LaP0573/open-field, which has its own license.
+
+SAMPLES (the .msb banks, published as release files, not in the source tree):
+- felt.msb: Osiris Piano by Versilian Studios and Karoryfer Samples, CC0 1.0. See felt/bank/.
+- roads.msb: jRhodes by Jeffrey Learman, CC BY-NC 4.0: free to share with credit, NOT for sale or
+  commercial use. See roads/bank/.
+- bows.msb: VSCO 2 Community Edition by Versilian Studios (Sam Gossner), CC0 1.0. See bows/bank/.
