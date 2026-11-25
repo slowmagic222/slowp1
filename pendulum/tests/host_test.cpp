@@ -1,6 +1,6 @@
 // Host test of pendulum.pack: pendulum.cpp compiled for the PC (OP1F_HOST, 32-bit) with stand-ins for the base.
-// Drives the sequencer's calls through a clock at 96 pulses a quarter, checks the swings' timing against the S1
-// spec, and paints the page into a 480 x 224 picture (tests/preview.ppm) for the preview.
+// Drives the sequencer's calls through a clock at 96 pulses a quarter, checks the swings' timing against the
+// design, and paints the page into a 480 x 224 picture (tests/preview.ppm) for the preview.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

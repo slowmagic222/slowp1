@@ -2,7 +2,7 @@
 
 A sequencer of swinging notes. Each key you press starts a pendulum that plays the note every time it crosses the middle, forever. Many keys swing at once and drift in and out of phase. An open-field **sequencer**, for synth and drum.
 
-Demo: _coming soon_
+<img src="demo.gif" width="720" alt="pendulum page, simulated on a computer">
 
 ## Install
 
@@ -21,6 +21,6 @@ Hold **help** to see every control. Settings are saved in `pendulum.bin`.
 
 ## Files
 
-`pendulum.cpp` player and page, `recipe.json`, `pendulum.svg.make`, `tests/`.
+`pendulum.cpp` player and page, `recipe.json`, `pendulum.svg.make`, `tests/` (host test, and `demo.sh` for the demo GIF).
 
 Code: GPL-3.0-or-later.
