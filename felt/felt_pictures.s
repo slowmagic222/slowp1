@@ -9,7 +9,7 @@
 .global op1f_art_felt
 .type op1f_art_felt, STT_OBJECT
 op1f_art_felt:
-    .long 0x31545241, 1, 1517, 19
+    .long 0x31545241, 1, 1517, 23
     .ascii "felt"
     .fill 12, 1, 0
 .global op1f_art_felt_path

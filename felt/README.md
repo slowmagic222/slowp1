@@ -23,6 +23,6 @@ the room wakes as you play, then the style knob swaps vase, tape and book.
 
 ## Files
 
-`felt.cpp` engine and page, `felt_scene.h` 3D page, `core/` the FELT sample core, `recipe.json` build recipe, `tools/felt_to_msb_vel.py` bank builder, `tests/` host tests, `bank/` sample credits.
+`felt.cpp` engine and page, `felt_scene.h` 3D page, `core/` the FELT sample core, `recipe.json` build recipe, `tests/` host tests, `bank/` sample credits.
 
 Samples: Osiris Piano (Versilian Studios, Karoryfer Samples), CC0. Code: GPL-3.0-or-later.

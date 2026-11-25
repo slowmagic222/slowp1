@@ -22,6 +22,6 @@ the town grows on the rug as you play, then the style knob swaps the case colour
 
 ## Files
 
-`roads.cpp` engine and page, `roads_scene.h` 3D page, `core/` sample core, `recipe.json`, `tools/tine_to_msb.py` bank builder, `tests/`, `bank/` sample credits.
+`roads.cpp` engine and page, `roads_scene.h` 3D page, `core/` sample core, `recipe.json`, `tests/`, `bank/` sample credits.
 
 **Samples: jRhodes by Jeffrey Learman, CC BY-NC 4.0.** Free to share with credit, not for commercial use. See `bank/`. Code: GPL-3.0-or-later.

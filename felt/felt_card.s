@@ -24,7 +24,7 @@ op1f_card_felt_level:
 .global op1f_card_felt
 .type op1f_card_felt, STT_OBJECT
 op1f_card_felt:
-    .long 0x44524143, 64, 10, 19
+    .long 0x44524143, 64, 10, 23
     .ascii "felt"
     .fill 12, 1, 0
     .long felt_frame
