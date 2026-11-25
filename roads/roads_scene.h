@@ -23,7 +23,7 @@ struct State {
     uint32_t angle;        // the turn, 0..65535 a whole turn; swivel() gives it, between 0 (isometric) and -45 degrees (front)
     uint32_t time;         // frames, for the animation
     int tone, sustain, wow, ambient;  // 0..100
-    int style;             // 0 OG, 1 SLOW, 2 LOFI
+    int style;             // 0 classic, 1 SLOW, 2 LOFI
     uint32_t keys;         // bit k: white key k (0..14) lit
     int sounding;          // voices sounding
     int start, loop_in, loop_out;     // the shift values, 0..100
@@ -532,7 +532,7 @@ static void step(State& st) {
 }
 
 
-// the car's paint by the style, as the title's colour: light grey (OG), blue (SLOW), grey (LOFI); lit, shaded
+// the car's paint by the style, as the title's colour: light grey (classic), blue (SLOW), grey (LOFI); lit, shaded
 static const uint16_t CAR[3][2] = {
     {rgb(0xcd,0xd0,0xc2), rgb(0xa2,0xa4,0xa6)},
     {rgb(0x4c,0x7d,0xa8), rgb(0x3c,0x60,0x87)},

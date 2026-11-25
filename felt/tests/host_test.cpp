@@ -1,5 +1,5 @@
 // Host test of felt.pack's engine: felt.cpp compiled for the PC (OP1F_HOST, 32-bit) with stand-ins for the base.
-// Checks the voice render against the FELT core run directly (which tests/test_core.c holds to the OG engine), the
+// Checks the voice render against the FELT core run directly (the reference), the
 // pitch from the step, events, the bank file's loading and silence without it.
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,7 +58,7 @@ static void render(Voice* v, unsigned voice, unsigned step, int velocity, unsign
 static int quiet() { for (int k = 0; k < 256; ++k) if (out[k]) return 0; return 1; }
 
 static int heard(Voice* v, int vel) { (void)vel; const ms_voice_t* m = &v->core.voices[0]; return m->gain_l > m->gain_r ? m->gain_l : m->gain_r; }   // the level, whatever the pan
-// The core run directly at 44.1 kHz, as the OG: the reference
+// The core run directly at 44.1 kHz, as the classic: the reference
 struct Ref { ms_core_t c; int32_t l[64], r[64]; };
 static Ref* ref;
 static void ref_start(int note, int vel) {

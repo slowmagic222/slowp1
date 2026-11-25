@@ -1,6 +1,6 @@
 # felt
 
-A soft felt piano. Port of my OG OP-1 FELT plugin as an open-field **synth engine**. 6 voices, stereo.
+A soft felt piano, as an open-field **synth engine**. 6 voices, stereo.
 
 ![felt page, simulated on a computer](demo.gif)
 

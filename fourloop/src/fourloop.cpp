@@ -6,8 +6,8 @@
 //     master dry). The base calls fourloop_process once a block of 64 frames on the master's Q31 sums, in place of
 //     the unit's own master effect, while it is switched on (no tails: off = the loops are silent and frozen, kept).
 //     4loop works on the master only: picked on a synth or drum sound, it passes the sound by untouched.
-//   - Values: the effect's four values are the four loops' levels, 0..32 (the OG's 32 steps). The knobs, the LFOs
-//     and the base's save of the master keep them. The pack takes the plain turns itself (OG resolution) and sets
+//   - Values: the effect's four values are the four loops' levels, 0..32 (the classic 32 steps). The knobs, the LFOs
+//     and the base's save of the master keep them. The pack takes the plain turns itself (classic resolution) and sets
 //     the value with op1f_param_set from its frame; the block writes the value into the core.
 //   - Page: T3 on the mixer shows 4loop's page in place of the master effect's (op1f_page_stand_in). Shift +
 //     metronome still opens the same page in any mode. The page is retained SVG: per loop a filled disc, a ring,
@@ -220,7 +220,7 @@ static void dress_text(const lc_view* v)
     *o = 0;
     int warning = o != line && !(page.pop_ms && (u32)(ms - page.pop_ms) < (u32)POP_MS) && !fl.fp.size;
     set_text(0, "t_status", line, OP1F_CENTRE);
-    int intro = s->intro_alpha && !warning;                          // OG start: press an encoder (four dots) to record
+    int intro = s->intro_alpha && !warning;                          // classic start: press an encoder (four dots) to record
     set_text(5, "t_logo", "4loop");
     set_text(6, "t_in1", intro ? "press an encoder" : "", OP1F_CENTRE);
     set_text(7, "t_in2", intro ? "to record" : "", OP1F_CENTRE);

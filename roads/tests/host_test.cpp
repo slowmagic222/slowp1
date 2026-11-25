@@ -1,6 +1,6 @@
 // Host test of roads.pack's engine: roads.cpp compiled for the PC (OP1F_HOST, 32-bit) with stand-ins for the base.
-// Checks the voice render against the TINE core run directly (which tests/test_tine.c holds to the OG engine), the
-// pitch from the step (against the OG's own sum), velocity layers, style input, the bank file's loading, the page.
+// Checks the voice render against the TINE core run directly (which tests/test_tine.c holds to the classic engine), the
+// pitch from the step (against the classic own sum), velocity layers, style input, the bank file's loading, the page.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,7 +56,7 @@ static void render(Voice* v, unsigned voice, unsigned step, int velocity, unsign
 }
 static int quiet() { for (int k = 0; k < 256; ++k) if (out[k]) return 0; return 1; }
 
-// The core run directly at 88.2 kHz with the OG's rate: the reference
+// The core run directly at 88.2 kHz with the classic rate: the reference
 struct Ref { ms_core_t c; int32_t l[128], r[128]; };
 static Ref* ref;
 static u32 og_rate(const ms_zone_t* z, u32 step) {
@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
     CHECK(bank_store.flags & MS_BANK_TINE, "the TINE flag");
     printf("bank: '%s', %u zones, %u Hz, flags %u\n", bank_store.name, (unsigned)bank_store.zone_count, (unsigned)bank_store.rate, (unsigned)bank_store.flags);
 
-    // pitch: the OG's own sum, exactly, at every note, bends and odd steps of every zone
+    // pitch: the classic own sum, exactly, at every note, bends and odd steps of every zone
     for (int n = 0; n < 128; ++n) CHECK(note_of(STEP[n]) == n, "note_of(%d)", n);
     CHECK(STEP[69] == 21426141u, "A4");
     long rates = 0; int rate_bad = 0;
@@ -121,8 +121,8 @@ int main(int argc, char** argv) {
             rate_bad += rate_for_step(&bank_store, z, s) != og_rate(z, s); ++rates;
         }
     }
-    CHECK(rate_bad == 0, "%d of %ld rates differ from the OG's", rate_bad, rates);
-    printf("pitch: %ld steps, every rate the OG's\n", rates);
+    CHECK(rate_bad == 0, "%d of %ld rates differ from the classic", rate_bad, rates);
+    printf("pitch: %ld steps, every rate the classic\n", rates);
 
     // the voice against the core, frame for frame
     int knobsets[][8] = {{0,55,0,0,0,50,100,0}, {0,0,0,0,0,50,100,0}, {60,90,0,0,0,50,100,0}, {20,30,0,0,0,50,100,70},
@@ -200,7 +200,7 @@ int main(int argc, char** argv) {
     CHECK(blocks < 20000, "a let-go note falls silent (%d blocks)", blocks);   // TINE's natural decay; the unit's envelope ends the voice
     printf("release: a short note at sustain 55 is silent after %d blocks (%.0f ms)\n", blocks, blocks * 128 / 88.2);
 
-    // notes outside TINE's 24..100 are silent, as on the OG
+    // notes outside TINE's 24..100 are silent, as classic
     render(voices[4], 4, STEP[110], 0, OP1F_VOICE_FRESH); render(voices[4], 4, STEP[110], 100 << 24, OP1F_VOICE_BEGINS);
     CHECK(quiet() && voices[4]->sounding == 0, "note 110: silent");
 

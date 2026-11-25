@@ -1,6 +1,6 @@
 # 4loop
 
-Four stereo loopers on the master. Port of my OG OP-1 4loop plugin as an open-field **master effect**.
+Four stereo loopers on the master, as an open-field **master effect**.
 
 Demo: _coming soon_
 

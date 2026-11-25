@@ -26,24 +26,24 @@
 
 /* Physical Field events the loader feeds in. Kept abstract so the exact key matrix / encoder
  * resolution of a given loader doesn't leak into the adapter. The press/turn semantics below are
- * reconciled to OG reelctl (reelloop-v11/reelctl/reelctl.c):
- *   - FE_ENC_TURN b = RAW encoder delta in OG op1_input units (NOT detents). The adapter applies
+ * reconciled to classic reelctl (reelloop-v11/reelctl/reelctl.c):
+ *   - FE_ENC_TURN b = RAW encoder delta in classic op1_input units (NOT detents). The adapter applies
  *     reelctl's exact formulas: level += (delta/1024)*1024, speed += delta/1024. So a turn under
- *     1024 of accumulated delta moves nothing — that is the OG resolution. A loader with only
+ *     1024 of accumulated delta moves nothing — that is the classic resolution. A loader with only
  *     coarse detents multiplies each detent by its raw-delta weight before sending.
- *   - FE_ENC_PRESS / FE_ENC_RELEASE are the four loop triggers (OG keys 0x3b..0x3e). The action
+ *   - FE_ENC_PRESS / FE_ENC_RELEASE are the four loop triggers (classic keys 0x3b..0x3e). The action
  *     fires on PRESS as LC_DOWN(value=shift): plain press = the rec/finish/dub state machine,
  *     SHIFT+press = reverse. Holding a trigger >= FP_HOLD_MS escalates to CLEAR. A plain short
  *     press sends LC_RELEASE on up (core no-op). The hold clock needs fp_tick() or fp_screen()
- *     pumped so a held key clears even with no further events (OG does this in its SERVICE event). */
+ *     pumped so a held key clears even with no further events (classic does this in its SERVICE event). */
 enum {
-    FE_ENC_TURN = 1,   /* a: encoder 0..3   b: raw delta (OG op1_input units) */
+    FE_ENC_TURN = 1,   /* a: encoder 0..3   b: raw delta (classic op1_input units) */
     FE_ENC_PRESS,      /* a: encoder 0..3   loop trigger down */
     FE_ENC_RELEASE,    /* a: encoder 0..3   loop trigger up */
     FE_KEY             /* a: fe_key id      b: 1 down / 0 up */
 };
 
-/* Hold-to-clear threshold. OG reelctl fires CLEAR at 400,000,000 CYCLES, which is ~1.0 s at the
+/* Hold-to-clear threshold. classic reelctl fires CLEAR at 400,000,000 CYCLES, which is ~1.0 s at the
  * original OP-1's ~400 MHz Blackfin core clock. Expressed in ms here; tune on hardware. */
 #define FP_HOLD_MS 1000u
 

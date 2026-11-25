@@ -1,16 +1,16 @@
-/* 4loop Field adapter — input mapping, reconciled to OG reelctl (reelloop-v11/reelctl/reelctl.c).
+/* 4loop Field adapter — input mapping, reconciled to classic reelctl (reelloop-v11/reelctl/reelctl.c).
  * GPL-3.0-or-later + OP-1 firmware permission.
  *
- * Faithful to OG where OG defines the gesture; the only addition is pan (OG is mono, so it had
+ * Faithful to classic where classic defines the gesture; the only addition is pan (classic is mono, so it had
  * none — pan is the Field-stereo win and lives on a second modifier so it never collides):
  *
- *   encoder turn            -> LC_LEVEL, value = (delta/1024)*1024   (OG resolution: <1024 = no move)
- *   SHIFT + turn            -> LC_SPEED, value =  delta/1024          (OG)
+ *   encoder turn            -> LC_LEVEL, value = (delta/1024)*1024   (classic resolution: <1024 = no move)
+ *   SHIFT + turn            -> LC_SPEED, value =  delta/1024          (classic)
  *   ALT   + turn            -> LC_PAN                                 (NEW, Field only)
  *   SIZE  + turn            -> LC_SIZE: right longer, left shorter (whole take down to 1/16; NEW)
- *   loop trigger press      -> LC_DOWN(value=shift): plain = rec/finish/dub, SHIFT = reverse  (OG)
- *   loop trigger hold >=1s   -> LC_CLEAR   (OG: 400,000,000 cycles ~ 1 s; see FP_HOLD_MS)
- *   loop trigger release    -> LC_RELEASE for a plain short press (core no-op; OG)
+ *   loop trigger press      -> LC_DOWN(value=shift): plain = rec/finish/dub, SHIFT = reverse  (classic)
+ *   loop trigger hold >=1s   -> LC_CLEAR   (classic: 400,000,000 cycles ~ 1 s; see FP_HOLD_MS)
+ *   loop trigger release    -> LC_RELEASE for a plain short press (core no-op; classic)
  *   SYNC key                -> LC_SYNC (global)
  *   PLAY / STOP keys        -> LC_PAUSE 0 / 1 (global)
  *
@@ -23,7 +23,7 @@
 
 static void cmd(field_plugin *fp, int kind, int index, int value)
 {
-    fp->intro_done = 1;                 /* first real interaction dismisses the intro (OG) */
+    fp->intro_done = 1;                 /* first real interaction dismisses the intro (classic) */
     lc_command(&fp->engine, kind, index, value);
 }
 
@@ -32,7 +32,7 @@ static uint32_t now(field_plugin *fp)
     return fp->host.now_ms ? fp->host.now_ms(fp->host.ctx) : fp->last_ms;
 }
 
-/* Fire CLEAR on any loop whose trigger has been held past the threshold. OG runs this off its
+/* Fire CLEAR on any loop whose trigger has been held past the threshold. classic runs this off its
  * SERVICE event so an idle audio thread can't turn a late tap into a clear; we run it off the tick
  * (fp_screen, or a loader timer) for the same reason. */
 void fp_tick(field_plugin *fp)
@@ -92,12 +92,12 @@ int fi_map(field_plugin *fp, const field_event *ev)
         if ((unsigned)k >= LC_LOOPS) return 0;
         fp->sel = (uint8_t)k;
         int delta = ev->b;
-        int steps = delta / 1024;             /* OG quantization */
+        int steps = delta / 1024;             /* classic quantization */
         if (fp->size)       { if (steps) cmd(fp, LC_SIZE, k, steps > 0 ? 1 : -1); }   /* NEW: one halving a detent */
         else if (fp->alt)   cmd(fp, LC_PAN,   k, steps * PAN_STEP);   /* NEW */
-        else if (fp->shift) cmd(fp, LC_SPEED, k, steps);             /* OG */
+        else if (fp->shift) cmd(fp, LC_SPEED, k, steps);             /* classic */
         else if (fp->level_external) fp->level_made[k] = fp->level_made[k] + steps;   /* the loader sets the level */
-        else                cmd(fp, LC_LEVEL, k, steps * 1024);      /* OG */
+        else                cmd(fp, LC_LEVEL, k, steps * 1024);      /* classic */
         return 1;
     }
     default:
