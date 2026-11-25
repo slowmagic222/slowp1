@@ -2,7 +2,9 @@
 
 A soft felt piano, as an open-field **synth engine**. 6 voices, stereo.
 
-Demo: _coming soon_
+![felt page, simulated on a computer](demo.gif)
+
+_Simulated on a computer from the pack's own scene code (values and names hidden): the room wakes as you play, then the style knob swaps vase, tape and book._
 
 ## Install
 
