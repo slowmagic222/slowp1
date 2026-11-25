@@ -1,6 +1,6 @@
 # slow-p1 field packs
 
-Five packs for the **OP-1 Field** running Faust's [open-field](https://github.com/LaP0573/open-field) custom firmware. Ports of my OG OP-1 plugins, plus two new ones.
+Five packs for the **OP-1 Field** running Faust's [open-field](https://github.com/LaP0573/open-field) custom firmware.
 
 | # | Pack | Kind | Files you need |
 | --- | --- | --- | --- |
