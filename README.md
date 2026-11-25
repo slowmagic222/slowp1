@@ -2,6 +2,21 @@
 
 Five packs for the **OP-1 Field** running Faust's [open-field](https://github.com/LaP0573/open-field) custom firmware.
 
+<table>
+<tr>
+<td align="center"><a href="felt/"><img src="felt/demo.gif" width="400" alt="felt demo"></a><br><a href="felt/"><b>felt</b></a></td>
+<td align="center"><a href="roads/"><img src="roads/demo.gif" width="400" alt="roads demo"></a><br><a href="roads/"><b>roads</b></a></td>
+</tr>
+<tr>
+<td align="center"><a href="bows/"><img src="bows/demo.gif" width="400" alt="bows demo"></a><br><a href="bows/"><b>bows</b></a></td>
+<td align="center"><a href="fourloop/"><img src="fourloop/demo.gif" width="400" alt="4loop demo"></a><br><a href="fourloop/"><b>4loop</b></a></td>
+</tr>
+<tr>
+<td align="center"><a href="pendulum/"><img src="pendulum/demo.gif" width="400" alt="pendulum demo"></a><br><a href="pendulum/"><b>pendulum</b></a></td>
+<td></td>
+</tr>
+</table>
+
 | # | Pack | Kind | Files you need |
 | --- | --- | --- | --- |
 | 1 | [felt](felt/) | synth engine: soft felt piano | `felt.pack` + `felt.msb` |
