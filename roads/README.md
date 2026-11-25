@@ -2,7 +2,9 @@
 
 An electric piano ("Roads", like Rhodes), as an open-field **synth engine**. 6 voices, stereo. The page grows a little town on a rug as you play.
 
-Demo: _coming soon_
+![roads page, simulated on a computer](demo.gif)
+
+_Simulated on a computer from the pack's own scene code (values and names hidden): the town grows on the rug as you play, then the style knob swaps the case colour._
 
 ## Install
 
