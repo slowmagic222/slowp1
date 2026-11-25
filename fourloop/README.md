@@ -4,7 +4,7 @@ Four stereo loopers on the master, as an open-field **master effect**.
 
 ![4loop page, simulated on a computer](demo.gif)
 
-_Simulated on a computer from the pack's own core and page code (text hidden, quiet stretches sped up): four takes recorded, levels, octaves, reverse, an overdub, loop size, sync, pause, and a loop cleared and recorded again._
+Press an encoder to start and stop the first loop. Press again to overdub or press another to add a loop. Synced together or Free and a-syncronized. With octave, reverse, and volume control per loop. 
 
 ## Install
 
