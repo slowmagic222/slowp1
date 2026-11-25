@@ -1,6 +1,6 @@
 // Simulates felt's page on the PC over a scripted performance (no text), writing PPM frames for felt/demo.gif.
 // g++ -O2 -std=gnu++11 tests/demo_sim.cpp -o demo_sim && ./demo_sim frames 4
-// ffmpeg -framerate 15 -i frames/f%04d.ppm -vf "scale=960:440:flags=neighbor,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=none" demo.gif
+// ffmpeg -framerate 15 -start_number 83 -i frames/f%04d.ppm -vf "scale=960:440:flags=neighbor,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=none" demo.gif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
