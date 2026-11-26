@@ -166,18 +166,38 @@ static void start_transition(lc_engine *e, int i, int target)
 static inline uint32_t span_of(const lc_loop *l) { return l->span; }
 static inline uint32_t dur_of(const lc_loop *l) { return l->dur; }
 
+/* Divide a signed 16-bit sample times a fade numerator of at most 23.
+ * After shifting by three, the magnitude is less than 2^17 and
+ * multiplying by 43691 fits a 32-bit unsigned word for this input range.
+ * This gives the same truncation toward zero as division by 24. */
+static inline int32_t fade_div24(int32_t v)
+{
+    int32_t q = (int32_t)(((lc_abs(v) >> 3) * 43691u) >> 17);
+    return v < 0 ? -q : q;
+}
+
 /* Interpolated, seam-faded stereo frame at a Q14 phase. */
 static void read_frame(lc_engine *e, int i, int64_t phase, int32_t out[2])
 {
     lc_loop *l = &e->loop[i];
-    uint32_t span = span_of(l), at = (uint32_t)(phase >> 14), next = at + 1; if (next >= span) next = 0;
-    const int16_t *a = lc_frame(e, i, at), *b = lc_frame(e, i, next);
+    uint32_t span = span_of(l), at = (uint32_t)(phase >> 14);
+    const int16_t *a = lc_frame(e, i, at);
     int32_t frac = (int32_t)(phase & 16383);
-    int32_t edge = (int32_t)(at < span - at ? at : span - at), seam = 24 >> l->quality; if (seam < 1) seam = 1;
-    for (int c = 0; c < 2; c++) {
-        int32_t v = a[c] + ((((int32_t)b[c] - a[c]) * frac) >> 14);
-        if (edge < seam) v = v * edge * (1 << l->quality) / 24;
-        out[c] = v;
+    out[0] = a[0];
+    out[1] = a[1];
+    if (frac) {
+        uint32_t next = at + 1;
+        const int16_t *b = a + 2;
+        if (next >= span) b = lc_frame(e, i, 0);
+        else if ((at ^ next) >> e->chunk_shift) b = lc_frame(e, i, next);
+        for (int c = 0; c < 2; c++)
+            out[c] += (((int32_t)b[c] - out[c]) * frac) >> 14;
+    }
+    int32_t edge = (int32_t)(at < span - at ? at : span - at);
+    int32_t seam = 24 >> l->quality; if (seam < 1) seam = 1;
+    if (edge < seam) {
+        int32_t scale = edge << l->quality;
+        for (int c = 0; c < 2; c++) out[c] = fade_div24(out[c] * scale);
     }
 }
 
@@ -351,8 +371,9 @@ static void note_meter(lc_engine *e, int i, const int32_t v[2])
 
 static void pan_frame(const lc_loop *l, int32_t v[2])
 {
-    if (l->pan > 0) v[0] = (int32_t)(((int64_t)v[0] * (32768 - l->pan)) >> 15);
-    else if (l->pan < 0) v[1] = (int32_t)(((int64_t)v[1] * (32768 + l->pan)) >> 15);
+    /* Both callers pan a signed 16-bit signal, including after a crossfade. */
+    if (l->pan > 0) v[0] = (v[0] * (32768 - l->pan)) >> 15;
+    else if (l->pan < 0) v[1] = (v[1] * (32768 + l->pan)) >> 15;
 }
 
 static void sample_tick(lc_engine *e, const int16_t in[2], int32_t mix[2])
@@ -371,8 +392,13 @@ static void sample_tick(lc_engine *e, const int16_t in[2], int32_t mix[2])
     if (e->sync && e->resync && !e->master_phase) { for (int i = 0; i < LC_LOOPS; i++) e->loop[i].sync_phase = 0; e->resync = 0; }
     for (int i = 0; i < LC_LOOPS; i++) {
         lc_loop *l = &e->loop[i];
-        l->gain += lc_limit(l->target_gain - l->gain, -16, 16);
-        for (int c = 0; c < 2; c++) { mix[c] += e->tail[i][c]; e->tail[i][c] = e->tail[i][c] * 63 / 64; }
+        if (l->gain != l->target_gain) l->gain += lc_limit(l->target_gain - l->gain, -16, 16);
+        for (int c = 0; c < 2; c++) {
+            const int32_t tail = e->tail[i][c];
+            mix[c] += tail;
+            const int32_t magnitude = (int32_t)((lc_abs(tail) * 63u) >> 6);
+            e->tail[i][c] = tail < 0 ? -magnitude : magnitude;
+        }
         if (l->state == LC_ARM) {
             if (l->capture_sync != LC_WAIT_SOUND) { if (e->master_phase == 0) l->state = LC_REC; }
             else if (lc_abs(in[0]) >= LC_SOUND || lc_abs(in[1]) >= LC_SOUND) { l->capture_sync = 0; l->state = LC_REC; }
@@ -405,7 +431,7 @@ static void sample_tick(lc_engine *e, const int16_t in[2], int32_t mix[2])
         int32_t v[2]; read_frame(e, i, l->phase, v);
         if (e->sync && e->master_length > 48) {
             uint32_t dur = dur_of(l), gap = l->sync_phase < dur - l->sync_phase ? l->sync_phase : dur - l->sync_phase;
-            if (gap < 24) { v[0] = v[0] * (int32_t)gap / 24; v[1] = v[1] * (int32_t)gap / 24; }
+            if (gap < 24) { v[0] = fade_div24(v[0] * (int32_t)gap); v[1] = fade_div24(v[1] * (int32_t)gap); }
         }
         for (int c = 0; c < 2; c++) e->last_wet[i][c] = lc_sat((v[c] * l->gain) >> 14);
         lc_transition *tr = &e->trans[i];
