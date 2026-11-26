@@ -22,7 +22,7 @@ op1f_card_fourloop_level:
 .global op1f_card_fourloop
 .type op1f_card_fourloop, STT_OBJECT
 op1f_card_fourloop:
-    .long 0x44524143, 64, 8, 4
+    .long 0x44524143, 64, 8, 5
     .ascii "fourloop"
     .fill 8, 1, 0
     .long fourloop_frame

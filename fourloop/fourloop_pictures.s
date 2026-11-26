@@ -9,7 +9,7 @@
 .global op1f_art_fourloop
 .type op1f_art_fourloop, STT_OBJECT
 op1f_art_fourloop:
-    .long 0x31545241, 1, 28152, 4
+    .long 0x31545241, 1, 28152, 5
     .ascii "fourloop"
     .fill 8, 1, 0
 .global op1f_art_fourloop_path
